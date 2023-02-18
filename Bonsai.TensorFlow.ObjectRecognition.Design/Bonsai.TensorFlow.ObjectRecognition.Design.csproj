@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <Title>Bonsai - GenericNetworkss Design Library</Title>
+    <Description>Bonsai Library containing reactive visualizations.</Description>
+    <PackageTags>Bonsai Rx Visualizers</PackageTags>
+    <TargetFramework>net472</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <VersionPrefix>0.1.0</VersionPrefix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bonsai.Vision.Design" Version="2.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bonsai.TensorFlow.ObjectRecognition\Bonsai.TensorFlow.ObjectRecognition.csproj" />
+	
+  </ItemGroup>
+
+</Project>
+

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Title>Bonsai - GenericNetworks Library</Title>
+    <Description>Bonsai Library for real-time generic network inference. TensorFlow 2.8.0 or compatible is required.</Description>
+    <PackageTags>Bonsai Rx DeepNets Inference Tracking</PackageTags>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFramework>net472</TargetFramework>
+    <VersionPrefix>0.1.0</VersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bonsai.Core" Version="2.6.0" />
+    <PackageReference Include="Bonsai.Vision" Version="2.6.1" />
+    <PackageReference Include="OpenCV.Net" Version="3.4.1" />
+    <PackageReference Include="TensorFlowSharp-Lite" Version="2.8.0" />
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
+  </ItemGroup>
+
+</Project>
