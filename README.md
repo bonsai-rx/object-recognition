@@ -17,3 +17,51 @@ After downloading the native TensorFlow binary and cuDNN, you can follow these s
 
 This library is made to run inference on the pre-trained network `ssd_inception_v2_coco_2017_11_17`. You can [download this network from `tfhub`](https://tfhub.dev/nvidia/unet/industrial/class_10/1) using the `[tensorflow_hub](https://www.tensorflow.org/hub/installation)` python package. 
 Inference on single frames can be run using the `PredictObject` operator. This node requires a path for a valid `.pb` file and a `.csv` file with human readable labels of objects identified by the network. 
+
+## How to generate the label's file
+
+Download the `labels.txt` from the root of this repository.
+## How to generate a .pb file
+
+To generate the .pb file necessary to run the operator, you can start with the following python codebase:
+
+```python
+
+import tensorflow as tf
+import tensorflow_hub as hub
+import pathlib
+from tensorflow.python.framework.convert_to_constants import convert_variables_to_constants_v2
+
+
+## Get the model from remote
+model_url = r'http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz'
+model_dir = tf.keras.utils.get_file(
+    fname= "ssd_mobilenet_v1_coco_2017_11_17",
+    origin=model_url,
+    untar=True)
+
+## Load the local model
+model_dir = pathlib.Path(model_dir)/"saved_model"
+model = tf.saved_model.load(str(model_dir))
+model = model.signatures['serving_default']
+
+## Freeze the model
+full_model = tf.function(lambda x: model(x))
+full_model = full_model.get_concrete_function(
+    tf.TensorSpec(model.inputs[0].shape, model.inputs[0].dtype))
+frozen_func = convert_variables_to_constants_v2(full_model)
+frozen_func.graph.as_graph_def()
+
+## Prints its inputs/outputs
+print("Frozen model inputs: ")
+print(frozen_func.inputs)
+print("Frozen model outputs: ")
+print(frozen_func.outputs)
+
+## Export the model to a .pb file
+tf.io.write_graph(graph_or_graph_def=frozen_func.graph,
+               logdir=r"imgclass",
+               name="frozen_graph.pb",
+               as_text=False)
+
+```
