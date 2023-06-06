@@ -8,13 +8,13 @@ using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-[assembly: TypeVisualizer(typeof(IdentifiedObjectArrayVisualizer), Target = typeof(IdentifiedObject[]))]
+[assembly: TypeVisualizer(typeof(IdentifiedObjectArrayVisualizer), Target = typeof(List<IdentifiedObject>))]
 
 namespace Bonsai.TensorFlow.ObjectRecognition.Design
 {
     public class IdentifiedObjectArrayVisualizer : IplImageVisualizer
     {
-        IdentifiedObject[] idedObjectArray;
+        List<IdentifiedObject> idedObjectArray;
         LabeledImageLayer labeledImage;
         ToolStripButton drawLabelsButton;
 
@@ -39,8 +39,10 @@ namespace Bonsai.TensorFlow.ObjectRecognition.Design
 
         public override void Show(object value)
         {
-            idedObjectArray = (IdentifiedObject[])value;
-            base.Show(idedObjectArray[0]?.Image);
+            idedObjectArray = value as List<IdentifiedObject>;
+            if (idedObjectArray.Count > 0) {
+                base.Show(idedObjectArray[0]?.Image); 
+            }
         }
 
         protected override void ShowMashup(IList<object> values)
@@ -50,7 +52,7 @@ namespace Bonsai.TensorFlow.ObjectRecognition.Design
 
             if ((idedObjectArray != null))
             {
-                if (idedObjectArray.Length > 0)
+                if (idedObjectArray.Count > 0)
                 {
                     if (DrawLabels)
                     {
@@ -74,7 +76,7 @@ namespace Bonsai.TensorFlow.ObjectRecognition.Design
 
             if ((idedObjectArray != null))
             {
-                if (idedObjectArray.Length > 0)
+                if (idedObjectArray.Count > 0)
                 {
                     DrawingHelper.SetDrawState(VisualizerCanvas);
                     int i = 0;

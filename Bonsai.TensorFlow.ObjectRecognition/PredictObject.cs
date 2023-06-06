@@ -10,7 +10,7 @@ using TensorFlow;
 namespace Bonsai.TensorFlow.ObjectRecognition
 {
     [Description("Performs object recognition with a ssd_inception_v2_coco_2017_11_17 network.")]
-    public class PredictObject : Transform<IplImage, IdentifiedObject[]>
+    public class PredictObject : Transform<IplImage, List<IdentifiedObject>>
     {
         /// <summary>
         /// ssd_inception_v2_coco_2017_11_17
@@ -25,9 +25,11 @@ namespace Bonsai.TensorFlow.ObjectRecognition
         [Description("Specifies the path to the text file containing the labels of the network (each line a label).")]
         public string Labels { get; set; }
 
-        public int TopHits { get; set; } = 1;
+        public int? TopHits { get; set; }
 
-        private IObservable<IdentifiedObject[]> Process(IObservable<IplImage[]> source)
+        public float MinimumConfidence { get; set; } = 0;
+
+        private IObservable<List<IdentifiedObject>> Process(IObservable<IplImage[]> source)
         {
             return Observable.Defer(() =>
             {
@@ -75,32 +77,38 @@ namespace Bonsai.TensorFlow.ObjectRecognition
                     var topObjects = new List<IdentifiedObject>(); 
 
                     int batch_idx = 0;
-                    for (int i = 0; i < TopHits; i++)
+                    var topHitsToTake = ((TopHits is null) ? BoundingBoxArr.GetLength(1) : TopHits);
+                    if (topHitsToTake > 0)
                     {
-                        var idedObject = new IdentifiedObject(input[0]);
-                        idedObject.Name = labels[(int)LabelIdxArr[batch_idx, i]-1];
-                        
-                        var box = new BoundingBox();
-                        var width = idedObject.Image.Width;
-                        var height = idedObject.Image.Height;
-                        box.LowerLeft = new Point2f(
-                            BoundingBoxArr[batch_idx, i, 1] * width,
-                            BoundingBoxArr[batch_idx, i, 0] * height);
-                        box.UpperRight = new Point2f(
-                            BoundingBoxArr[batch_idx, i, 3] * width, 
-                            BoundingBoxArr[batch_idx, i, 2] * height);
-                        idedObject.Box = box;
+                        for (int i = 0; i < topHitsToTake; i++)
+                        {
+                            var idedObject = new IdentifiedObject(input[0]);
+                            idedObject.Name = labels[(int)LabelIdxArr[batch_idx, i] - 1];
 
-                        idedObject.Confidence = ConfidenceArr[batch_idx, i];
-                        topObjects.Add(idedObject);
+                            var box = new BoundingBox();
+                            var width = idedObject.Image.Width;
+                            var height = idedObject.Image.Height;
+                            box.LowerLeft = new Point2f(
+                                BoundingBoxArr[batch_idx, i, 1] * width,
+                                BoundingBoxArr[batch_idx, i, 0] * height);
+                            box.UpperRight = new Point2f(
+                                BoundingBoxArr[batch_idx, i, 3] * width,
+                                BoundingBoxArr[batch_idx, i, 2] * height);
+                            idedObject.Box = box;
+
+                            idedObject.Confidence = ConfidenceArr[batch_idx, i];
+                            topObjects.Add(idedObject);
+                        }
                     }
 
-                    return topObjects.ToArray();
+                    return (topObjects
+                    .Where(x => x.Confidence > MinimumConfidence)
+                    .OrderBy(v => v.Confidence).ToList());
                 });
             });
         }
 
-        public override IObservable<IdentifiedObject[]> Process(IObservable<IplImage> source)
+        public override IObservable<List<IdentifiedObject>> Process(IObservable<IplImage> source)
         {
             return Process(source.Select(frame => new IplImage[] { frame }));
         }
