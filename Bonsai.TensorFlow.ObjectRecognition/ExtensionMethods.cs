@@ -1,7 +1,5 @@
 ﻿using System;
 using OpenCV.Net;
-using System.IO;
-using System.Collections.Generic;
 
 namespace Bonsai.TensorFlow.ObjectRecognition
 {
@@ -108,26 +106,100 @@ namespace Bonsai.TensorFlow.ObjectRecognition
             }
         }
 
-        public static bool FormatEquals(this IplImage image, IplImage other)
+        public static string[] GetClassLabels()
         {
-            return image.Width == other.Width && image.Height == other.Height &&
-                   image.Depth == other.Depth && image.Channels == other.Channels;
-        }
-
-
-        public static string[] CsvToArray(string path)
-        {
-        using (var reader = new StreamReader(path))
-        {
-            List<string> listA = new List<string>();
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-
-                listA.Add(line);
-            }
-            return listA.ToArray();
+            string[] classLabels = {
+                "person",
+                "bicycle",
+                "car",
+                "motorcycle",
+                "airplane",
+                "bus",
+                "train",
+                "truck",
+                "boat",
+                "traffic light",
+                "fire hydrant",
+                "UNK",
+                "stop sign",
+                "parking meter",
+                "bench",
+                "bird",
+                "cat",
+                "dog",
+                "horse",
+                "sheep",
+                "cow",
+                "elephant",
+                "bear",
+                "zebra",
+                "giraffe",
+                "UNK",
+                "backpack",
+                "umbrella",
+                "UNK",
+                "UNK",
+                "handbag",
+                "tie",
+                "suitcase",
+                "frisbee",
+                "skis",
+                "snowboard",
+                "sports ball",
+                "kite",
+                "baseball bat",
+                "baseball glove",
+                "skateboard",
+                "surfboard",
+                "tennis racket",
+                "bottle",
+                "UNK",
+                "wine glass",
+                "cup",
+                "fork",
+                "knife",
+                "spoon",
+                "bowl",
+                "banana",
+                "apple",
+                "sandwich",
+                "orange",
+                "broccoli",
+                "carrot",
+                "hot dog",
+                "pizza",
+                "donut",
+                "cake",
+                "chair",
+                "couch",
+                "potted plant",
+                "bed",
+                "UNK",
+                "dining table",
+                "UNK",
+                "UNK",
+                "toilet",
+                "UNK",
+                "tv",
+                "laptop",
+                "mouse",
+                "remote",
+                "keyboard",
+                "cell phone",
+                "microwave",
+                "oven",
+                "toaster",
+                "sink",
+                "refrigerator",
+                "UNK",
+                "book",
+                "clock",
+                "vase",
+                "scissors",
+                "teddy bear",
+                "hair drier",
+                "toothbrush"};
+            return classLabels;
         }
     }
-}
 }

@@ -75,7 +75,6 @@ namespace Bonsai.TensorFlow.ObjectRecognition
                 CV.Resize(frame, resizeTemp);
                 frame = resizeTemp;
             }
-
             return frame;
         }
 
@@ -91,7 +90,6 @@ namespace Bonsai.TensorFlow.ObjectRecognition
                 CV.CvtColor(frame, colorTemp, colorConversion.Value);
                 frame = colorTemp;
             }
-
             return frame;
         }
 
