@@ -6,3 +6,4 @@ obj
 *.layout
 movies
 Assets
+Externals/Networks/**

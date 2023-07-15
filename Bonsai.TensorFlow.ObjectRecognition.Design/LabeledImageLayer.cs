@@ -80,7 +80,6 @@ namespace Bonsai.TensorFlow.ObjectRecognition.Design
                     labelFont = null;
                     hasLabels = false;
                 }
-
                 disposed = true;
             }
         }
