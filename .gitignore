@@ -6,4 +6,8 @@ obj
 *.layout
 movies
 Assets
-Externals/Networks/**
+Externals/Networks/*.pb
+Externals/Networks/*.txt
+Externals/Networks/LICENSE
+
+
