@@ -17,21 +17,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ssd_inception_v2_coco_2017_11_17.pb" />
+    <Content Include="..\Externals\Networks\LICENSE" Link="LICENSE" PackagePath="content" />
+    <Content Include="..\Externals\Networks\ssd_inception_v2_coco_2017_11_17.pb" Link="ssd_inception_v2_coco_2017_11_17.pb" PackagePath="content">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
-  <ItemGroup>
+    <ItemGroup>
     <PackageReference Include="Bonsai.Core" Version="2.6.0" />
     <PackageReference Include="Bonsai.Vision" Version="2.6.1" />
     <PackageReference Include="OpenCV.Net" Version="3.4.1" />
     <PackageReference Include="TensorFlowSharp-Lite" Version="2.8.0" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="ssd_inception_v2_coco_2017_11_17.pb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

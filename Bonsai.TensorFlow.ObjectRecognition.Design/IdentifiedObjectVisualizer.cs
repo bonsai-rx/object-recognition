@@ -12,14 +12,19 @@ using System.Collections.Generic;
 
 namespace Bonsai.TensorFlow.ObjectRecognition.Design
 {
+    /// <summary>
+    /// Provides a type visualizer that draws a visual representation of
+    /// an identified objects extracted from each image in the sequence.
+    /// </summary>
     public class IdentifiedObjectVisualizer : IplImageVisualizer
     {
-        IdentifiedObject idedObject;
+        IdentifiedObject identifiedObject;
         LabeledImageLayer labeledImage;
         ToolStripButton drawLabelsButton;
 
         public bool DrawLabels { get; set; } = true;
-
+        
+        /// <inheritdoc/>
         public override void Load(IServiceProvider provider)
         {
             base.Load(provider);
@@ -37,41 +42,45 @@ namespace Bonsai.TensorFlow.ObjectRecognition.Design
             };
         }
 
+        /// <inheritdoc/>
         public override void Show(object value)
         {
-            idedObject = (IdentifiedObject)value;
-            base.Show(idedObject?.Image);
+            identifiedObject = (IdentifiedObject)value;
+            base.Show(identifiedObject?.Image);
         }
 
+        /// <inheritdoc/>
         protected override void ShowMashup(IList<object> values)
         {
             base.ShowMashup(values);
-            if (idedObject != null)
+            if (identifiedObject != null)
             {
                 if (DrawLabels)
                 {
-                    labeledImage.UpdateLabels(idedObject.Image.Size, VisualizerCanvas.Font, (graphics, labelFont) =>
+                    labeledImage.UpdateLabels(identifiedObject.Image.Size, VisualizerCanvas.Font, (graphics, labelFont) =>
                     {
-                        DrawingHelper.DrawLabels(graphics, labelFont, idedObject);
+                        DrawingHelper.DrawLabels(graphics, labelFont, identifiedObject);
                     });
                 }
                 else labeledImage.ClearLabels();
             }
         }
 
+        /// <inheritdoc/>
         protected override void RenderFrame()
         {
             GL.Color4(Color4.White);
             base.RenderFrame();
 
-            if (idedObject != null)
+            if (identifiedObject != null)
             {
                 DrawingHelper.SetDrawState(VisualizerCanvas);
-                DrawingHelper.DrawIdentifiedObject(idedObject);
+                DrawingHelper.DrawIdentifiedObject(identifiedObject);
                 labeledImage.Draw();
             }
         }
 
+        /// <inheritdoc/>
         public override void Unload()
         {
             base.Unload();
